@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="sf-UpsertFlow" doc:id="e2f2ec5c-121b-414f-9bfd-ec03cf453508" >
+		<http:listener doc:name="Listener" doc:id="d96fd206-bef8-465a-a8f6-f9569228a960" config-ref="HTTP_Listener_config" path="/upsert"/>
+		<salesforce:upsert doc:name="Upsert" doc:id="a63c56ab-3b04-499d-9a30-546318f030f6" config-ref="Salesforce_Config" objectType="Contact" externalIdFieldName="Email"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1b360730-a3e3-4c0b-bbb6-17132a4c045e" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="58438546-7565-4ecb-941a-8e5f1f6e7f97" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
